@@ -1,0 +1,19 @@
+key press sends count of updates
+class Rectangle
+{
+    tranformation(count_translateX, count_translateY, count_scaleX, count_scaleY...)
+    {
+        this.translateX += count_translateX;
+        this.translateY += count_translateY;
+        .
+        ..
+        ...
+        vec3.set(translation,...);
+        ..
+
+        this.transform.settranslate()
+        ...
+        ...
+        ...
+    }
+}
