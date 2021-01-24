@@ -106,7 +106,7 @@ window.onload = () =>
             }
             else if(shape_mode == 's')
             {
-                Figures.push(new Square(gl, clipCoordinates[0], clipCoordinates[1], Color['square'], orderid));
+                Figures.push(new Rectangle(gl, clipCoordinates[0], clipCoordinates[1], 0.1, 0.1, Color['square'], orderid));
             }
             else if(shape_mode == 'c')
             {

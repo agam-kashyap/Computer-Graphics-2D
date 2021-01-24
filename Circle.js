@@ -16,7 +16,7 @@ export default class Circle
             throw new Error("Buffer for Rectangle's vertices could Not be allocated");
         }
 
-        this.center_circle = [centerX, centerY];
+        this.center_circle = [0, 0];
         this.radius = radius;
         this.vertexAttributesData = [];
         this.vertCount = 3;
@@ -27,25 +27,30 @@ export default class Circle
 
             var vert1 = [
                 // X, Y, Z
-                centerX + Math.sin(j)*radius, centerY + Math.cos(j)*radius, 0,
+                Math.sin(j)*radius, Math.cos(j)*radius, 0,
             ];
 
             var vert2 = [
                 // X, Y, Z
-                centerX, centerY, 0,
+                0, 0, 0,
             ];
 
             this.vertexAttributesData = this.vertexAttributesData.concat(vert1);
             this.vertexAttributesData = this.vertexAttributesData.concat(vert2);
         }		
         this.transform = new Transform();
+        this.transform.setTranslate(vec3.fromValues(centerX, centerY, 0));
+        this.transform.updateMVPMatrix();
+
+        this.centerX = centerX;
+        this.centerY = centerY;
     
         this.translation = vec3.create();
         this.roationAngle = 0;
         this.rotationAxis = vec3.create();
         this.scale = vec3.create();
-        this.translateX = 0;
-        this.translateY = 0;
+        this.translateX = centerX;
+        this.translateY = centerY;
         this.scalingVal = 1;
         vec3.set(this.translation, this.translateX, this.translateY, 0);
         vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
@@ -91,12 +96,15 @@ export default class Circle
 
     is_inside(mouseX, mouseY, mouseZ=0)
     {
+        console.log(this.center_circle);
+        console.log(this.transform.getMVPMatrix());
         let tempVertexAttributesData = [];
         tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.center_circle);
         let bool_inside = false;
         let distance = Math.sqrt(
             Math.pow((mouseX-tempVertexAttributesData[0]),2) + Math.pow((mouseY-tempVertexAttributesData[1]),2)
             );
+            console.log(distance, this.radius);
         if(distance <= this.radius)
         {
             bool_inside = true;
@@ -106,49 +114,51 @@ export default class Circle
     
     transformation_variable(count_translateX, count_translateY, count_scaling, speedX, speedY, scalePoint)
     {
-        if(count_translateX >= 0)
+
+        if(count_translateX > 0)
         {
             for(let i=0;i<count_translateX;i+=1)
             {
                 this.translateX += speedX
             }
+            
         }
-        else
+        else if(count_translateX < 0)
         {
             for(let i=0;i>count_translateX;i-=1)
             {
                 this.translateX -= speedX
             }
         }
-        if(count_translateY >= 0)
+        if(count_translateY > 0)
         {
             for(let i=0;i<count_translateY;i+=1)
             {
                 this.translateY += speedY
             }
         }
-        else
+        else if (count_translateY < 0)
         {
             for(let i=0;i>count_translateY;i-=1)
             {
                 this.translateY -= speedY
             }
         }
-        if(count_scaling >= 0)
+        if(count_scaling > 0)
         {
             for(let i=0;i<count_scaling;i+=1)
             {
                 this.scalingVal += scalePoint
             }
         }
-        else
+        else if(count_scaling < 0)
         {
             for(let i=0;i>count_scaling;i-=1)
             {
                 this.scalingVal -= scalePoint
             }
-        }
-        vec3.set(this.translation, this.translateX, this.translateY, 0);
+        }        
+        vec3.set(this.translation, this.translateX, this.translateY, 0);  
         vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
         this.transform.setTranslate(this.translation);
         this.transform.setScale(this.scale);

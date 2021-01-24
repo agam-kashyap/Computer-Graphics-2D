@@ -38,8 +38,6 @@ export default class Rectangle
         this.roationAngle = 0;
         this.rotationAxis = vec3.create();
         this.scale = vec3.create();
-        // this.translateX = 0;
-        // this.translateY = 0;
         this.translateX = centerX;
         this.translateY = centerY;
         this.scalingVal = 1;
@@ -94,7 +92,7 @@ export default class Rectangle
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, this.vertexIndices, this.gl.DYNAMIC_DRAW);
         
 
-        this.transform.updateMVPMatrix();
+        // this.transform.updateMVPMatrix();
 
         shader.setUniformMatrix4fv(uModelTransformMatrix, this.transform.getMVPMatrix());
         
