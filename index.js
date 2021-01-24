@@ -36,45 +36,46 @@ let orderid = 0;
 let selected_object_index = -1;
 let selected_color = new Float32Array([0.1, 0.1, 0.1, 0.8]);
 // // Transformation Matrix 
-let translation = vec3.create();
-let rotationAngle = 0;
-let rotationAxis = vec3.create();
-let scale = vec3.create();
+let count_rotationAngle = 0;
 let speedX = 0.01;
 let speedY = 0.01;
-let translateX = 0;
-let translateY = 0;
-let scalingVal = 1;
-vec3.set(translation, translateX, translateY, 0);
-vec3.set(scale, scalingVal, scalingVal, 1);
+let scalePoint = 0.1;
+let count_translateX = 0;
+let count_translateY = 0;
+let count_scalingVal = 0;
 function mode2_transform(ev)
 {
     if(ev.key == "ArrowUp")
     {
-        translateY += speedY;
+        count_translateY = 1;
     }
     else if(ev.key == "ArrowDown")
     {
-        translateY -= speedY;
+        count_translateY = -1;
     }
     else if(ev.key == "ArrowLeft")
     {
-        translateX -= speedX;
+        count_translateX = -1;
     }
     else if(ev.key == "ArrowRight")
     {
-        translateX += speedX;
+        count_translateX = 1;
     }
     else if(ev.key == "+")
     {
-        scalingVal += 0.1;
+        count_scalingVal = 1;
     }
     else if(ev.key == "-")
     {
-        scalingVal -= 0.1;
+        count_scalingVal = -1;
     }
-    vec3.set(translation, translateX, translateY, 0);
-    vec3.set(scale, scalingVal, scalingVal, 1);
+    else
+    {
+        count_translateX = 0;
+        count_translateY = 0;
+        count_rotationAngle = 0;
+        count_scalingVal = 0;
+    }
 }
 // New Variable to keep track of when object selection changes to reset transformation parameters
 let OldObject = -1;
@@ -133,15 +134,10 @@ window.onload = () =>
             selected_object_index = max_order;
             if(selected_object_index != OldObject)
             {
-                translation = vec3.create();
-                rotationAngle = 0;
-                rotationAxis = vec3.create();
-                scale = vec3.create();
-                translateX = 0;
-                translateY = 0;
-                scalingVal = 1;
-                vec3.set(translation, translateX, translateY, 0);
-                vec3.set(scale, scalingVal, scalingVal, 1);
+                count_rotationAngle = 0;
+                count_translateX = 0;
+                count_translateY = 0;
+                count_scalingVal = 0;
             }
             OldObject = selected_object_index;  
         }
@@ -157,18 +153,6 @@ window.onload = () =>
     document.addEventListener("keydown", (ev) => {
         if(ev.key == "m")
         {
-            if(mode_value == 1)
-            {
-                translation = vec3.create();
-                rotationAngle = 0;
-                rotationAxis = vec3.create();
-                scale = vec3.create();
-                translateX = 0;
-                translateY = 0;
-                scalingVal = 1;
-                vec3.set(translation, translateX, translateY, 0);
-                vec3.set(scale, scalingVal, scalingVal, 1);
-            }
             mode_value += 1;
             mode_value = (mode_value%3);
         }
@@ -276,11 +260,17 @@ function animate()
     {
         if(index == selected_object_index)
         {
-            console.log("Hi")
             Figures[i].draw_selected(shader, selected_color);
-            Figures[i].transform.setTranslate(translation);
-            Figures[i].transform.setScale(scale);
-            Figures[i].transform.updateMVPMatrix();
+            Figures[i].transformation_variable(
+                count_translateX, 
+                count_translateY,
+                count_scalingVal,
+                speedX,
+                speedY,
+                scalePoint);
+            count_translateX = 0;
+            count_translateY = 0;
+            count_scalingVal = 0;
         }
         else
         {

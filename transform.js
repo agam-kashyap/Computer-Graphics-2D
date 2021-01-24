@@ -31,19 +31,6 @@ export default class Transform
         mat4.scale(this.modelTransformMatrix, this.modelTransformMatrix, this.scale);
 	}
 
-    resetMatrix()
-    {
-        this.translate = vec3.fromValues( 0, 0, 0);
-		this.scale = vec3.fromValues( 1, 1, 1);
-		this.rotationAngle = 0;
-		this.rotationAxis = vec3.fromValues( 0, 0, 1);
-
-		this.modelTransformMatrix = mat4.create();
-		mat4.identity(this.modelTransformMatrix);
-
-		this.mvpMatrix = this.modelTransformMatrix;
-    }
-
 	setTranslate(translationVec)
 	{
 		this.translate = translationVec;
