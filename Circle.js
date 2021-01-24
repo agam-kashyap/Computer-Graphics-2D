@@ -13,7 +13,7 @@ export default class Circle
         this.vertexAttributesBuffer = this.gl.createBuffer();
         if(!this.vertexAttributesBuffer)
         {
-            throw new Error("Buffer for Rectangle's vertices could Not be allocated");
+            throw new Error("Buffer for Circle's vertices could Not be allocated");
         }
 
         this.center_circle = [0, 0];
@@ -111,59 +111,6 @@ export default class Circle
         }
         return [bool_inside, this.orderid];
     }    
-    
-    transformation_variable(count_translateX, count_translateY, count_scaling, speedX, speedY, scalePoint)
-    {
-
-        if(count_translateX > 0)
-        {
-            for(let i=0;i<count_translateX;i+=1)
-            {
-                this.translateX += speedX
-            }
-            
-        }
-        else if(count_translateX < 0)
-        {
-            for(let i=0;i>count_translateX;i-=1)
-            {
-                this.translateX -= speedX
-            }
-        }
-        if(count_translateY > 0)
-        {
-            for(let i=0;i<count_translateY;i+=1)
-            {
-                this.translateY += speedY
-            }
-        }
-        else if (count_translateY < 0)
-        {
-            for(let i=0;i>count_translateY;i-=1)
-            {
-                this.translateY -= speedY
-            }
-        }
-        if(count_scaling > 0)
-        {
-            for(let i=0;i<count_scaling;i+=1)
-            {
-                this.scalingVal += scalePoint
-            }
-        }
-        else if(count_scaling < 0)
-        {
-            for(let i=0;i>count_scaling;i-=1)
-            {
-                this.scalingVal -= scalePoint
-            }
-        }        
-        vec3.set(this.translation, this.translateX, this.translateY, 0);  
-        vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
-        this.transform.setTranslate(this.translation);
-        this.transform.setScale(this.scale);
-        this.transform.updateMVPMatrix();
-    }
 
     multiply(a, b)
     {
@@ -173,30 +120,10 @@ export default class Circle
 	        a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], //c, g, k, o
 	        a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15]; //d, h, l, p
 
-	    // Cache only the current line of the second matrix
 	    var b0  = b[0], b1 = b[1], b2 = 0, b3 = 1;
         out[0] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
 	    out[1] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
         out[2] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-        // out[3] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-
-	    // b0 = b[3]; b1 = b[4]; b2 = b[5]; b3 = 1;
-	    // out[3] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-	    // out[4] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-	    // out[5] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-	    // // out[7] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-
-	    // b0 = b[6]; b1 = b[7]; b2 = b[8]; b3 = 1;
-	    // out[6] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-	    // out[7] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-	    // out[8] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-	    // // out[11] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
-
-	    // b0 = b[9]; b1 = b[10]; b2 = b[11]; b3 = 1;
-	    // out[9] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
-	    // out[10] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
-	    // out[11] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
-	    // // out[15] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
 	    return out;
     }
 };

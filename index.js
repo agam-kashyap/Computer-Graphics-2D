@@ -3,7 +3,6 @@ import Shader from './shader.js';
 import vertexShaderSrc from './vertex.js';
 import fragmentShaderSrc from './fragment.js';
 import Rectangle from './Rectangle.js';
-import Square from './Square.js';
 import Circle from './Circle.js';
 import { vec3, mat4 } from 'https://cdn.skypack.dev/gl-matrix';
 
@@ -35,50 +34,10 @@ let MouseCoordinates = 0;
 let orderid = 0;
 let selected_object_index = -1;
 let selected_color = new Float32Array([0.1, 0.1, 0.1, 0.8]);
-// // Transformation Matrix 
-let count_rotationAngle = 0;
+
 let speedX = 0.01;
 let speedY = 0.01;
 let scalePoint = 0.1;
-let count_translateX = 0;
-let count_translateY = 0;
-let count_scalingVal = 0;
-function mode2_transform(ev)
-{
-    if(ev.key == "ArrowUp")
-    {
-        count_translateY = 1;
-    }
-    else if(ev.key == "ArrowDown")
-    {
-        count_translateY = -1;
-    }
-    else if(ev.key == "ArrowLeft")
-    {
-        count_translateX = -1;
-    }
-    else if(ev.key == "ArrowRight")
-    {
-        count_translateX = 1;
-    }
-    else if(ev.key == "+")
-    {
-        count_scalingVal = 1;
-    }
-    else if(ev.key == "-")
-    {
-        count_scalingVal = -1;
-    }
-    else
-    {
-        count_translateX = 0;
-        count_translateY = 0;
-        count_rotationAngle = 0;
-        count_scalingVal = 0;
-    }
-}
-// New Variable to keep track of when object selection changes to reset transformation parameters
-let OldObject = -1;
 
 // User Input
 // Use the canvas for taking Mouse input since the its functionality is bounded by the canvas' area
@@ -131,15 +90,7 @@ window.onload = () =>
                     }
                 }
             }
-            selected_object_index = max_order;
-            if(selected_object_index != OldObject)
-            {
-                count_rotationAngle = 0;
-                count_translateX = 0;
-                count_translateY = 0;
-                count_scalingVal = 0;
-            }
-            OldObject = selected_object_index;  
+            selected_object_index = max_order; 
         }
 
         //Grouped Transformation
@@ -180,7 +131,72 @@ window.onload = () =>
         // Creates values of transformation
         else if( mode_value == 1)
         {
-            mode2_transform(ev);
+            if(ev.key == "ArrowUp")
+            {
+                Figures[selected_object_index].translateY += speedY;
+                vec3.set(
+                    Figures[selected_object_index].translation, 
+                    Figures[selected_object_index].translateX, 
+                    Figures[selected_object_index].translateY, 
+                    0);
+                Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
+                Figures[selected_object_index].transform.updateMVPMatrix();
+            }
+            else if(ev.key == "ArrowDown")
+            {
+                Figures[selected_object_index].translateY -= speedY;
+                vec3.set(
+                    Figures[selected_object_index].translation, 
+                    Figures[selected_object_index].translateX, 
+                    Figures[selected_object_index].translateY, 
+                    0);
+                Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
+                Figures[selected_object_index].transform.updateMVPMatrix();
+            }
+            else if(ev.key == "ArrowLeft")
+            {
+                Figures[selected_object_index].translateX -= speedX;
+                vec3.set(
+                    Figures[selected_object_index].translation, 
+                    Figures[selected_object_index].translateX, 
+                    Figures[selected_object_index].translateY, 
+                    0);
+                Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
+                Figures[selected_object_index].transform.updateMVPMatrix();
+            }
+            else if(ev.key == "ArrowRight")
+            {
+                Figures[selected_object_index].translateX += speedX;
+                vec3.set(
+                    Figures[selected_object_index].translation, 
+                    Figures[selected_object_index].translateX, 
+                    Figures[selected_object_index].translateY, 
+                    0);
+                Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
+                Figures[selected_object_index].transform.updateMVPMatrix();
+            }
+            else if(ev.key == "+")
+            {
+                Figures[selected_object_index].scalingVal += scalePoint;
+                vec3.set(
+                    Figures[selected_object_index].scale, 
+                    Figures[selected_object_index].scalingVal, 
+                    Figures[selected_object_index].scalingVal, 
+                    0);
+                Figures[selected_object_index].transform.setScale(Figures[selected_object_index].scale);
+                Figures[selected_object_index].transform.updateMVPMatrix();
+            }
+            else if(ev.key == "-")
+            {
+                Figures[selected_object_index].scalingVal -= scalePoint;
+                vec3.set(
+                    Figures[selected_object_index].scale, 
+                    Figures[selected_object_index].scalingVal, 
+                    Figures[selected_object_index].scalingVal, 
+                    0);
+                Figures[selected_object_index].transform.setScale(Figures[selected_object_index].scale);
+                Figures[selected_object_index].transform.updateMVPMatrix();
+            }
         }
     });
 
@@ -262,16 +278,6 @@ function animate()
         if(index == selected_object_index)
         {
             Figures[i].draw_selected(shader, selected_color);
-            Figures[i].transformation_variable(
-                count_translateX, 
-                count_translateY,
-                count_scalingVal,
-                speedX,
-                speedY,
-                scalePoint);
-            count_translateX = 0;
-            count_translateY = 0;
-            count_scalingVal = 0;
         }
         else
         {

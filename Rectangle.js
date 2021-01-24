@@ -68,13 +68,8 @@ export default class Rectangle
         
     }
 
-    getTransform()
-    {
-        return this.transform;
-    }
     draw_selected(shader, color)
     {
-        
         const uModelTransformMatrix = shader.uniform("uModelTransformMatrix");
         let elementPerVertex = 3;
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexAttributesBuffer);
@@ -90,9 +85,6 @@ export default class Rectangle
         const indexBuffer = this.gl.createBuffer();
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, this.vertexIndices, this.gl.DYNAMIC_DRAW);
-        
-
-        // this.transform.updateMVPMatrix();
 
         shader.setUniformMatrix4fv(uModelTransformMatrix, this.transform.getMVPMatrix());
         
@@ -127,60 +119,6 @@ export default class Rectangle
             }
         }
         return [bool_inside, this.orderid];
-    }
-
-    transformation_variable(count_translateX, count_translateY, count_scaling, speedX, speedY, scalePoint)
-    {
-
-        if(count_translateX > 0)
-        {
-            for(let i=0;i<count_translateX;i+=1)
-            {
-                this.translateX += speedX
-            }
-            
-        }
-        else if(count_translateX < 0)
-        {
-            for(let i=0;i>count_translateX;i-=1)
-            {
-                this.translateX -= speedX
-            }
-        }
-        if(count_translateY > 0)
-        {
-            for(let i=0;i<count_translateY;i+=1)
-            {
-                this.translateY += speedY
-            }
-        }
-        else if (count_translateY < 0)
-        {
-            for(let i=0;i>count_translateY;i-=1)
-            {
-                this.translateY -= speedY
-            }
-        }
-        if(count_scaling > 0)
-        {
-            for(let i=0;i<count_scaling;i+=1)
-            {
-                this.scalingVal += scalePoint
-            }
-        }
-        else if(count_scaling < 0)
-        {
-            for(let i=0;i>count_scaling;i-=1)
-            {
-                this.scalingVal -= scalePoint
-            }
-        }        
-        vec3.set(this.translation, this.translateX, this.translateY, 0);
-        
-        vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
-        this.transform.setTranslate(this.translation);
-        this.transform.setScale(this.scale);
-        this.transform.updateMVPMatrix();
     }
 
     multiply(a, b)
