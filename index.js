@@ -102,7 +102,7 @@ window.onload = () =>
         {
             if(shape_mode == 'r')
             {
-                Figures.push(new Rectangle(gl, clipCoordinates[0], clipCoordinates[1], Color['rectangle'], orderid));
+                Figures.push(new Rectangle(gl, clipCoordinates[0], clipCoordinates[1], 0.1, 0.2, Color['rectangle'], orderid));
             }
             else if(shape_mode == 's')
             {
@@ -222,6 +222,7 @@ const name_shapes = {
     'c' : 'Circle'
 };
 
+let ran = 0
 function animate()
 {
     // Text Box dynamic Handler
@@ -253,7 +254,7 @@ function animate()
     // Text Box Handler ends
 
     renderer.clear()
-
+    
     // IMPORTANT: Figure handling
     let index = 0;
     for(let i in Figures)

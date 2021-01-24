@@ -3,16 +3,16 @@ import { vec3, mat4 } from 'https://cdn.skypack.dev/gl-matrix';
 
 export default class Rectangle
 {
-    constructor(gl, centerX, centerY, color, orderid)
+    constructor(gl, centerX, centerY, width, height, color, orderid)
     {
         this.orderid = orderid;
 
         this.vertexAttributesData = new Float32Array([
             // x, y, z
-            centerX - 0.1, centerY - 0.2, 0.0, // A
-            centerX - 0.1, centerY + 0.2, 0.0, // B
-            centerX + 0.1, centerY + 0.2, 0.0, // C
-            centerX + 0.1, centerY - 0.2, 0.0, // D
+            - width/2, -height/2, 0.0, // A
+            - width/2, height/2, 0.0, // B
+            width/2, height/2, 0.0, // C
+            width/2, -height/2, 0.0, // D
         ]);
 
         this.vertexIndices = new Uint16Array([
@@ -28,13 +28,20 @@ export default class Rectangle
             throw new Error("Buffer for Rectangle's vertices could Not be allocated");
         }		
         this.transform = new Transform();
+        this.transform.setTranslate(vec3.fromValues(centerX, centerY, 0));
+        this.transform.updateMVPMatrix();
+
+        this.centerX = centerX;
+        this.centerY = centerY;
 
         this.translation = vec3.create();
         this.roationAngle = 0;
         this.rotationAxis = vec3.create();
         this.scale = vec3.create();
-        this.translateX = 0;
-        this.translateY = 0;
+        // this.translateX = 0;
+        // this.translateY = 0;
+        this.translateX = centerX;
+        this.translateY = centerY;
         this.scalingVal = 1;
         vec3.set(this.translation, this.translateX, this.translateY, 0);
         vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
@@ -60,10 +67,16 @@ export default class Rectangle
         
         shader.setUniformMatrix4fv(uModelTransformMatrix, this.transform.getMVPMatrix());
         this.gl.drawElements(this.gl.TRIANGLES, this.vertexIndices.length, this.gl.UNSIGNED_SHORT, indexBuffer);
+        
     }
 
+    getTransform()
+    {
+        return this.transform;
+    }
     draw_selected(shader, color)
     {
+        
         const uModelTransformMatrix = shader.uniform("uModelTransformMatrix");
         let elementPerVertex = 3;
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexAttributesBuffer);
@@ -80,6 +93,9 @@ export default class Rectangle
         this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
         this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, this.vertexIndices, this.gl.DYNAMIC_DRAW);
         
+
+        this.transform.updateMVPMatrix();
+
         shader.setUniformMatrix4fv(uModelTransformMatrix, this.transform.getMVPMatrix());
         
         this.gl.drawElements(this.gl.TRIANGLES, this.vertexIndices.length, this.gl.UNSIGNED_SHORT, indexBuffer);
@@ -117,49 +133,52 @@ export default class Rectangle
 
     transformation_variable(count_translateX, count_translateY, count_scaling, speedX, speedY, scalePoint)
     {
-        if(count_translateX >= 0)
+
+        if(count_translateX > 0)
         {
             for(let i=0;i<count_translateX;i+=1)
             {
                 this.translateX += speedX
             }
+            
         }
-        else
+        else if(count_translateX < 0)
         {
             for(let i=0;i>count_translateX;i-=1)
             {
                 this.translateX -= speedX
             }
         }
-        if(count_translateY >= 0)
+        if(count_translateY > 0)
         {
             for(let i=0;i<count_translateY;i+=1)
             {
                 this.translateY += speedY
             }
         }
-        else
+        else if (count_translateY < 0)
         {
             for(let i=0;i>count_translateY;i-=1)
             {
                 this.translateY -= speedY
             }
         }
-        if(count_scaling >= 0)
+        if(count_scaling > 0)
         {
             for(let i=0;i<count_scaling;i+=1)
             {
                 this.scalingVal += scalePoint
             }
         }
-        else
+        else if(count_scaling < 0)
         {
             for(let i=0;i>count_scaling;i-=1)
             {
                 this.scalingVal -= scalePoint
             }
-        }
+        }        
         vec3.set(this.translation, this.translateX, this.translateY, 0);
+        
         vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
         this.transform.setTranslate(this.translation);
         this.transform.setScale(this.scale);
