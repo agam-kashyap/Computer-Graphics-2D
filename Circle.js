@@ -62,20 +62,12 @@ export default class Circle
         //minx, miny, maxx, maxy
         let temp = [];
         let tempVertexAttributesData = [];
-        tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.vertexAttributesData);
-        let count = 0;
-        for(let i in tempVertexAttributesData)
-        {
-            if(count < 2)
-            {
-                temp.push(tempVertexAttributesData[i]);
-            }
-            if(count > 5 && count < 8)
-            {
-                temp.push(tempVertexAttributesData[i]);
-            }
-            count +=1;
-        }
+        tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.center_circle);
+
+        temp.push(tempVertexAttributesData[0] - this.radius);
+        temp.push(tempVertexAttributesData[1] - this.radius);
+        temp.push(tempVertexAttributesData[0] + this.radius);
+        temp.push(tempVertexAttributesData[1] + this.radius);
         return temp;
     }
     
