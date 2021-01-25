@@ -35,14 +35,38 @@ export default class Rectangle
         this.centerY = centerY;
 
         this.translation = vec3.create();
-        this.roationAngle = 0;
+        this.rotationAngle = 0;
         this.rotationAxis = vec3.create();
         this.scale = vec3.create();
         this.translateX = centerX;
         this.translateY = centerY;
         this.scalingVal = 1;
+        vec3.set(this.rotationAxis, 0, 0, 1);
         vec3.set(this.translation, this.translateX, this.translateY, 0);
         vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
+    }
+
+    returnbounds()
+    {
+        //minx, miny, maxx, maxy
+        let temp = [];
+        let tempVertexAttributesData = [];
+        tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.vertexAttributesData);
+        let count = 0;
+        let min_vertex= [], max_vertex = [];
+        for(let i in tempVertexAttributesData)
+        {
+            if(count < 3)
+            {
+                min_vertex.push(tempVertexAttributesData[i]);
+            }
+            if(count > 5 && count < 9)
+            {
+                max_vertex.push(tempVertexAttributesData[i]);
+            }
+            count +=1;
+        }
+        return [min_vertex[0], min_vertex[1], max_vertex[0], max_vertex[1]];
     }
 
     draw(shader)

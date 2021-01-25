@@ -15,7 +15,10 @@ export default class Transform
 		this.mvpMatrix = this.modelTransformMatrix;
 
 		this.updateMVPMatrix();
-    }
+		this.tempTranslate = vec3.fromValues(0, 0, 0);
+		this.tempX = 0;
+		this.tempY = 0;
+	}
     
     getMVPMatrix()
 	{
@@ -27,10 +30,35 @@ export default class Transform
 	{
 		mat4.identity(this.modelTransformMatrix);
         mat4.translate(this.modelTransformMatrix, this.modelTransformMatrix, this.translate);
-		// mat4.rotate(this.modelTransformMatrix, this.modelTransformMatrix, this.rotationAngle, this.rotationAxis);
+		mat4.rotate(this.modelTransformMatrix, this.modelTransformMatrix, this.rotationAngle, this.rotationAxis);
         mat4.scale(this.modelTransformMatrix, this.modelTransformMatrix, this.scale);
 	}
 
+	updateTempMatrix()
+	{
+		mat4.identity(this.modelTransformMatrix);
+		// mat4.translate(this.modelTransformMatrix, this.modelTransformMatrix, this.translate);
+		mat4.translate(this.modelTransformMatrix, this.modelTransformMatrix, vec3.fromValues(1*this.tempX, 1*this.tempY, 0));
+		// console.log(this.modelTransformMatrix);
+		mat4.rotate(this.modelTransformMatrix, this.modelTransformMatrix, this.rotationAngle, this.rotationAxis);
+		// console.log(this.modelTransformMatrix);
+		mat4.translate(this.modelTransformMatrix, this.modelTransformMatrix, vec3.fromValues(-1*this.tempX, -1*this.tempY, 0));
+		console.log(this.modelTransformMatrix);
+		mat4.translate(this.modelTransformMatrix, this.modelTransformMatrix, vec3.fromValues(this.translate[0] ,this.translate[1], 0));
+		console.log(this.modelTransformMatrix);
+	}
+
+	resetMVPMatrix()
+	{
+		this.rotationAngle = 0;
+		this.rotationAxis = vec3.fromValues(0,0,0);
+		this.updateMVPMatrix();
+	}
+	setRotateTranslate(bigX, bigY)
+	{
+		this.tempX = bigX;
+		this.tempY = bigY;
+	}
 	setTranslate(translationVec)
 	{
 		this.translate = translationVec;

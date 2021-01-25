@@ -38,6 +38,44 @@ let selected_color = new Float32Array([0.1, 0.1, 0.1, 0.8]);
 let speedX = 0.01;
 let speedY = 0.01;
 let scalePoint = 0.1;
+let rotationAngle = 0.1;
+
+// Get Bounded Box'x coordinates
+let bbox_minx = 200;
+let bbox_miny = 200;
+let bbox_maxx = -200;
+let bbox_maxy = -200;
+// Combined center
+let bigX = 0;
+let bigY = 0;
+function boundedbox()
+{
+    let temparr = [];
+    Figures.forEach((fig) => {
+        temparr = fig.returnbounds()
+    
+        if(temparr[0] < bbox_minx)
+        {
+            bbox_minx = temparr[0];
+        }
+        if(temparr[1] < bbox_miny)
+        {
+            bbox_miny = temparr[1];
+        }
+        if(temparr[2] > bbox_maxx)
+        {
+            bbox_maxx = temparr[2];
+        }
+        if(temparr[3] > bbox_maxy)
+        {
+            bbox_maxy = temparr[3];
+        }
+
+    });
+    // Combined center
+    bigX = (bbox_maxx + bbox_minx)/2;
+    bigY = (bbox_maxy + bbox_miny)/2;
+}
 
 // User Input
 // Use the canvas for taking Mouse input since the its functionality is bounded by the canvas' area
@@ -104,8 +142,19 @@ window.onload = () =>
     document.addEventListener("keydown", (ev) => {
         if(ev.key == "m")
         {
+            if(mode_value == 2)
+            {
+                Figures.forEach((fig)=>{
+                    fig.transform.resetMVPMatrix();
+                    fig.rotationAngle = 0;
+                });
+            }
             mode_value += 1;
             mode_value = (mode_value%3);
+            if(mode_value == 2)
+            {
+                boundedbox();
+            }
         }
         else if(ev.key == 'Escape')
         {
@@ -139,6 +188,7 @@ window.onload = () =>
                     Figures[selected_object_index].translateX, 
                     Figures[selected_object_index].translateY, 
                     0);
+                Figures[selected_object_index].tempTranslation=Figures[selected_object_index].translation;
                 Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
                 Figures[selected_object_index].transform.updateMVPMatrix();
             }
@@ -150,6 +200,7 @@ window.onload = () =>
                     Figures[selected_object_index].translateX, 
                     Figures[selected_object_index].translateY, 
                     0);
+                    Figures[selected_object_index].tempTranslation=Figures[selected_object_index].translation;
                 Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
                 Figures[selected_object_index].transform.updateMVPMatrix();
             }
@@ -161,6 +212,7 @@ window.onload = () =>
                     Figures[selected_object_index].translateX, 
                     Figures[selected_object_index].translateY, 
                     0);
+                    Figures[selected_object_index].tempTranslation=Figures[selected_object_index].translation;
                 Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
                 Figures[selected_object_index].transform.updateMVPMatrix();
             }
@@ -172,6 +224,7 @@ window.onload = () =>
                     Figures[selected_object_index].translateX, 
                     Figures[selected_object_index].translateY, 
                     0);
+                    Figures[selected_object_index].tempTranslation=Figures[selected_object_index].translation;
                 Figures[selected_object_index].transform.setTranslate(Figures[selected_object_index].translation);
                 Figures[selected_object_index].transform.updateMVPMatrix();
             }
@@ -196,6 +249,33 @@ window.onload = () =>
                     0);
                 Figures[selected_object_index].transform.setScale(Figures[selected_object_index].scale);
                 Figures[selected_object_index].transform.updateMVPMatrix();
+            }
+            else if(ev.key == "x")
+            {
+                delete Figures[selected_object_index];
+                selected_object_index = -1;
+            }
+        }
+        else
+        {
+            
+            if(ev.key == "ArrowLeft")
+            {
+                Figures.forEach((fig) => {
+                    fig.transform.setRotateTranslate(bigX, bigY);
+                    fig.rotationAngle += rotationAngle;
+                    fig.transform.setRotate(fig.rotationAxis, fig.rotationAngle);
+                    fig.transform.updateTempMatrix();
+                });
+            }
+            else if(ev.key == "ArrowRight")
+            {
+                Figures.forEach((fig) => {
+                    fig.transform.setRotateTranslate(bigX, bigY);
+                    fig.rotationAngle -= rotationAngle;
+                    fig.transform.setRotate(fig.rotationAxis, fig.rotationAngle);
+                    fig.transform.updateTempMatrix();
+                });
             }
         }
     });

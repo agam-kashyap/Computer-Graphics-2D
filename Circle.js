@@ -46,16 +46,39 @@ export default class Circle
         this.centerY = centerY;
     
         this.translation = vec3.create();
-        this.roationAngle = 0;
+        this.rotationAngle = 0;
         this.rotationAxis = vec3.create();
         this.scale = vec3.create();
         this.translateX = centerX;
         this.translateY = centerY;
         this.scalingVal = 1;
+        vec3.set(this.rotationAxis, 0, 0, 1);
         vec3.set(this.translation, this.translateX, this.translateY, 0);
         vec3.set(this.scale, this.scalingVal, this.scalingVal, 1);
     }
 
+    returnbounds()
+    {
+        //minx, miny, maxx, maxy
+        let temp = [];
+        let tempVertexAttributesData = [];
+        tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.vertexAttributesData);
+        let count = 0;
+        for(let i in tempVertexAttributesData)
+        {
+            if(count < 2)
+            {
+                temp.push(tempVertexAttributesData[i]);
+            }
+            if(count > 5 && count < 8)
+            {
+                temp.push(tempVertexAttributesData[i]);
+            }
+            count +=1;
+        }
+        return temp;
+    }
+    
     draw(shader)
     {
         const uModelTransformMatrix = shader.uniform("uModelTransformMatrix");

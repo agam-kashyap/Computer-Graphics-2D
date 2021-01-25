@@ -1,19 +1,16 @@
-key press sends count of updates
-class Rectangle
+First compute the center of all the object
 {
-    tranformation(count_translateX, count_translateY, count_scaleX, count_scaleY...)
+    create_boundung_box()
     {
-        this.translateX += count_translateX;
-        this.translateY += count_translateY;
-        .
-        ..
-        ...
-        vec3.set(translation,...);
-        ..
-
-        this.transform.settranslate()
-        ...
-        ...
-        ...
+        take four values for every object
+        [
+            minx, miny,
+            minx, maxy,
+            maxx, miny,
+            maxx, maxy,
+        ]
+        find min(all minx, all miny)
+        find max(all maxx, all maxy)
     }
 }
+
