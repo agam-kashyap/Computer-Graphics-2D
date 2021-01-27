@@ -64,10 +64,10 @@ export default class Circle
         let tempVertexAttributesData = [];
         tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.center_circle);
 
-        temp.push(tempVertexAttributesData[0] - this.radius);
-        temp.push(tempVertexAttributesData[1] - this.radius);
-        temp.push(tempVertexAttributesData[0] + this.radius);
-        temp.push(tempVertexAttributesData[1] + this.radius);
+        temp.push(tempVertexAttributesData[0] - this.radius*this.scalingVal);
+        temp.push(tempVertexAttributesData[1] - this.radius*this.scalingVal);
+        temp.push(tempVertexAttributesData[0] + this.radius*this.scalingVal);
+        temp.push(tempVertexAttributesData[1] + this.radius*this.scalingVal);
         return temp;
     }
     
@@ -111,16 +111,13 @@ export default class Circle
 
     is_inside(mouseX, mouseY, mouseZ=0)
     {
-        console.log(this.center_circle);
-        console.log(this.transform.getMVPMatrix());
         let tempVertexAttributesData = [];
         tempVertexAttributesData = this.multiply(this.transform.getMVPMatrix(), this.center_circle);
         let bool_inside = false;
         let distance = Math.sqrt(
             Math.pow((mouseX-tempVertexAttributesData[0]),2) + Math.pow((mouseY-tempVertexAttributesData[1]),2)
             );
-            console.log(distance, this.radius);
-        if(distance <= this.radius)
+        if(distance <= this.radius*this.scalingVal)
         {
             bool_inside = true;
         }
