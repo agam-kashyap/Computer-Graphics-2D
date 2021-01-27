@@ -24,6 +24,15 @@ In mode 2:
 
 Pressing m again makes mode 0 and takes you to the previous state i.e. without the rotations. 
 ```
+## Visuals from the Program
+!["Mode 0: Inserting objects mode](./Mode0.png)
+*Top left corner we can see the Mode and Shape mode. Using r,s,c to draw the shapes*
+
+!["Mode 1"](./Mode1.png)
+*Clicking on an object to select it and using arrow, +, - keys to transform and scale it. Selected Circle can be seen as shaded in gray*
+
+!["Mode 2"](./Mode2.png)
+*Using the left and right arrow keys to rotate the scene about centroid about 90 degress approx*
 
 # File Structure
 
@@ -39,4 +48,7 @@ Pressing m again makes mode 0 and takes you to the previous state i.e. without t
   - index.html
   - globalStyle.css
 - Report : Contains my observations, approach, conclusions from this project
-- VideoReport : MP4 video containing the demo
+- VideoReport.mp4 : MP4 video containing the demo
+- Mode0.png : Contains a screenshot of the program in Mode 0
+- Mode1.png : Contains a screenshot of the program in Mode 1
+- Mode2.png : Contains a screenshot of program in Mode 2 with the scene rotated by ~ 90 degrees
